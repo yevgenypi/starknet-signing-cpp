@@ -23,7 +23,7 @@ Order::Order( const std::string& theMarket, OrderSide theOrderSide, OrderType th
 
     if( orderType == OrderType::Limit && !theLimitPrice.has_value() )
     {
-        throw new SignerException( "If OrderType::Limit theLimitPrice shall exist" );
+        throw SignerException( "If OrderType::Limit theLimitPrice shall exist" );
     }
     limitPrice = theLimitPrice;
 }
@@ -46,12 +46,15 @@ starkware::PrimeFieldElement encodeChainSide( OrderSide value )
     using namespace starkware;
     using Uint256 = PrimeFieldElement::ValueType;
 
+    static const auto BUY = PrimeFieldElement::FromBigInt( Uint256( 1 ) );
+    static const auto SELL = PrimeFieldElement::FromBigInt( Uint256( 2 ) );
+
     switch( value )
     {
         case OrderSide::Buy:
-            return PrimeFieldElement::FromBigInt( Uint256( 1 ) );
+            return BUY;
         case OrderSide::Sell:
-            return PrimeFieldElement::FromBigInt( Uint256( 2 ) );
+            return SELL;
     }
 }
 
@@ -110,7 +113,7 @@ void Order::setTimestamp( std::chrono::milliseconds value )
     timestamp = value;
 }
 
-std::chrono::milliseconds Order::getTimeStamp() const
+std::chrono::milliseconds Order::getTimestamp() const
 {
     return timestamp;
 }
@@ -145,7 +148,7 @@ std::vector< starkware::PrimeFieldElement > Order::pedersenEncode() const
     const PrimeFieldElement market = signer::strToFelt( this->market.c_str(), this->market.length() );
     const PrimeFieldElement chainSide = encodeChainSide( this->orderSide );
     const PrimeFieldElement orderType = signer::encodeOrderType( this->orderType );
-    const PrimeFieldElement chainSize = PrimeFieldElement::FromUint( size * 100000000 );
+    const PrimeFieldElement chainSize = PrimeFieldElement::FromUint( std::llround(size * 100000000) );
     const PrimeFieldElement chainPrice = PrimeFieldElement::FromBigInt( getChainPrice() );
 
     return { orderTypeName, timestamp, market, chainSide, orderType, chainSize, chainPrice };

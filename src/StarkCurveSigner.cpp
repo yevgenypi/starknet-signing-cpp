@@ -56,7 +56,7 @@ starkware::Signature StarkCurveSigner::signMessage( const EncodableIface& messag
     catch( StarkwareCppWrapper::ApiException& e )
     {
         std::cerr << e.what() << std::endl;
-        throw e;
+        throw;
     }
 #endif
 }
@@ -75,7 +75,7 @@ starkware::Signature StarkCurveSigner::signMessage( const EncodableIface& messag
     catch( StarkwareCppWrapper::ApiException& e )
     {
         std::cerr << e.what() << std::endl;
-        throw e;
+        throw;
     }
 }
 
@@ -92,7 +92,7 @@ bool StarkCurveSigner::verifyEcdsa(const starkware::PrimeFieldElement& hash, con
     catch( StarkwareCppWrapper::ApiException& e )
     {
         std::cerr << e.what() << std::endl;
-        throw e;
+        throw;
     }
 #endif
 }

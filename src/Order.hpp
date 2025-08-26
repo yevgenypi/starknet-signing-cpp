@@ -27,7 +27,7 @@ enum OrderType
     Limit
 };
 
-std::string toString( OrderType type );
+static std::string toString( OrderType type );
 starkware::PrimeFieldElement encodeOrderType( OrderType value );
 
 class Order: public HashableIface
@@ -42,7 +42,7 @@ class Order: public HashableIface
     Uint256 getChainPrice() const;
 
     void setTimestamp( std::chrono::milliseconds value );
-    std::chrono::milliseconds getTimeStamp() const;
+    std::chrono::milliseconds getTimestamp() const;
 
     std::string compileOrderRequestPayload( const starkware::Signature& signature ) const;
     virtual std::vector< starkware::PrimeFieldElement > pedersenEncode() const override;
